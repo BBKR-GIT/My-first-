@@ -1,0 +1,132 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+
+// Product class
+class Product {
+    private int id;
+    private String name;
+    private double price;
+
+    public Product(int id, String name, double price) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+    }
+
+    public int getId() { return id; }
+    public String getName() { return name; }
+    public double getPrice() { return price; }
+
+    @Override
+    public String toString() {
+        return id + ". " + name + " - $" + price;
+    }
+}
+
+// Cart class
+class Cart {
+    private ArrayList<Product> items = new ArrayList<>();
+
+    public void addProduct(Product product) {
+        items.add(product);
+        System.out.println(product.getName() + " added to cart.");
+    }
+
+    public void viewCart() {
+        if (items.isEmpty()) {
+            System.out.println("Your cart is empty.");
+            return;
+        }
+
+        double total = 0;
+        System.out.println("\n--- Your Cart ---");
+        for (Product p : items) {
+            System.out.println(p.getName() + " - $" + p.getPrice());
+            total += p.getPrice();
+        }
+        System.out.println("Total: $" + total);
+    }
+
+    public void checkout() {
+        if (items.isEmpty()) {
+            System.out.println("Cart is empty. Add products first.");
+            return;
+        }
+
+        viewCart();
+        System.out.println("Checkout successful. Thank you for shopping!");
+        items.clear();
+    }
+}
+
+// Main class
+public class ShoppingApp {
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        ArrayList<Product> products = new ArrayList<>();
+        products.add(new Product(1, "Laptop", 800));
+        products.add(new Product(2, "Phone", 500));
+        products.add(new Product(3, "Headphones", 100));
+        products.add(new Product(4, "Keyboard", 50));
+
+        Cart cart = new Cart();
+        int choice;
+
+        do {
+            System.out.println("\n===== Shopping App =====");
+            System.out.println("1. View Products");
+            System.out.println("2. Add to Cart");
+            System.out.println("3. View Cart");
+            System.out.println("4. Checkout");
+            System.out.println("5. Exit");
+            System.out.print("Enter choice: ");
+
+            choice = scanner.nextInt();
+
+            switch (choice) {
+                case 1:
+                    System.out.println("\n--- Products ---");
+                    for (Product p : products) {
+                        System.out.println(p);
+                    }
+                    break;
+
+                case 2:
+                    System.out.print("Enter product ID to add: ");
+                    int id = scanner.nextInt();
+                    boolean found = false;
+                    for (Product p : products) {
+                        if (p.getId() == id) {
+                            cart.addProduct(p);
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (!found) {
+                        System.out.println("Product not found.");
+                    }
+                    break;
+
+                case 3:
+                    cart.viewCart();
+                    break;
+
+                case 4:
+                    cart.checkout();
+                    break;
+
+                case 5:
+                    System.out.println("Exiting... Thank you!");
+                    break;
+
+                default:
+                    System.out.println("Invalid choice. Try again.");
+            }
+
+        } while (choice != 5);
+
+        scanner.close();
+    }
+}
